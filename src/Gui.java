@@ -25,5 +25,6 @@ JMenuItem menuItemNew;
     this.toFront();
     this.pack();
     this.setVisible(true);
+    System.out.println("Gui booted");
 }
 }
