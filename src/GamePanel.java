@@ -9,20 +9,22 @@
         public static int cordsx;
         public static int cordsy;
         public static boolean[][] gridCells = new boolean[rows][cols];
-
+        public static boolean drawable = true;
 
         public GamePanel() {
 
         }
         public void setCell(boolean[][] gridCells) {
-            if (gridCells[cordsy][cordsx] == false) {
-                gridCells[cordsy][cordsx] = true;
-                GamePanel.gridCells = gridCells;
-                repaint();
-            } else {
-                gridCells[cordsy][cordsx] = false;
-                GamePanel.gridCells = gridCells;
-                repaint();
+            if (drawable == true) {
+                if (gridCells[cordsy][cordsx] == false) {
+                    gridCells[cordsy][cordsx] = true;
+                    GamePanel.gridCells = gridCells;
+                    repaint();
+                } else {
+                    gridCells[cordsy][cordsx] = false;
+                    GamePanel.gridCells = gridCells;
+                    repaint();
+                }
             }
         }
         public void paintComponent(Graphics g) {
