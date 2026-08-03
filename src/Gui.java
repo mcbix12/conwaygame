@@ -2,11 +2,16 @@ import javax.management.remote.JMXConnectionNotification;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+// main GUI setup
 public class Gui extends JFrame implements ActionListener, MouseListener {
+    //handles input so if mouse clicked it takes the cords and divdes it by 20 and gets the location
     public void mouseClicked(MouseEvent e) {
+        //checks if drawable state is true before drawing
         if (GamePanel.drawable == true) {
-            System.out.println("click!");
 
+            //debug message
+            System.out.println("click!");
+            //present
             System.out.println(e.getX());
             System.out.println(e.getY());
 
@@ -129,6 +134,7 @@ public class Gui extends JFrame implements ActionListener, MouseListener {
                 break;
             case "New Game":
                 System.out.println("test");
+                //for
             break;
         }
     }
