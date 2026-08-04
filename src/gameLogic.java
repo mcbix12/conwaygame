@@ -6,17 +6,22 @@ public class gameLogic {
     public static int speedms = 200;
     public static boolean gamerunning = false;
     private static Timer timer;
-
+    public static int tick;
     public static void start(GamePanel panel) {
-        if (timer != null) return;
         timer = new Timer(speedms, actionEvent -> {
             if (gamerunning) {
                 step(panel);
+                tick++;
+                System.out.println(tick);
             }
         });
         timer.start();
     }
-
+    public static void stop() {
+        if (timer != null) {
+            timer.stop();
+        }
+    }
     public static void  step(GamePanel panel) {
         boolean[][] grid = GamePanel.gridCells;
         int rows = GamePanel.rows;
@@ -47,7 +52,7 @@ public class gameLogic {
         int rows = GamePanel.rows;
         int cols = GamePanel.cols;
         int count = 0;
-        System.out.println("You are counting");
+
 
         for (int dr = -1; dr <= 1; dr++) {
             for (int dc =  -1; dc <= 1; dc++ ) {
