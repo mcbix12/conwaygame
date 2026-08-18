@@ -1,4 +1,3 @@
-import javax.management.remote.JMXConnectionNotification;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -51,36 +50,36 @@ public class Gui extends JFrame implements ActionListener, MouseListener {
 
     public GamePanel gamePanel;
 
-
+    //initializing all the different gui buttons/panels/menus
     JMenuBar menuBar;
     JMenu menu;
     JMenuItem menuItemNew;
     JPanel buttonpanel;
     JMenuItem menuItemStart;
     JMenuItem menuItemStop;
-    JButton drawbutton;
-    JLabel drawstatus;
     JLabel tick;
     JSlider speedSlider;
     JLabel speedLabel;
-
+    JButton startbutton;
+    JButton stopbutton;
 
     public Gui() {
+        //confiures window
         setTitle("Conways Game Of Life");
         this.gamePanel = new GamePanel();
         this.add(gamePanel);
         this.getContentPane().setPreferredSize(new Dimension(1200, 800));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-
+        // ints the menu bar
         menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
 
 
-
+        //adds the menu bar
         menu = new JMenu("Game");
         menuBar.add(menu);
-
+        //adds each part of the menu such as the START and the STOP and the new game and the action listners
         menuItemStart = new JMenuItem("Start");
         menu.add(menuItemStart);
         menuItemStart.addActionListener(this);
@@ -91,26 +90,38 @@ public class Gui extends JFrame implements ActionListener, MouseListener {
         menu.add(menuItemNew);
         menuItemNew.addActionListener(this);
 
+        //listens for inputs for the gamepanel grid
         gamePanel.addMouseListener(this);
 
+        //builds the start button stop button housing plus slider and tick
         buttonpanel = new JPanel();
         buttonpanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 37));
 
-
+        //sets background color to gray
         buttonpanel.setBackground(Color.gray);
 
-        drawbutton = new JButton("Draw");
-        drawbutton.addActionListener(this);
-        buttonpanel.add(drawbutton);
+        //adds start button to the buttonpanel
+        startbutton = new JButton("Start");
+        startbutton.addActionListener(this);
+        buttonpanel.add(startbutton);
+        // adds stop button to the buttonpanel in the same way above ^
+        stopbutton = new JButton("Stop");
+        stopbutton.addActionListener(this);
+        buttonpanel.add(stopbutton);
 
-        drawstatus = new JLabel(GamePanel.drawable ? "On" : "off");
-        buttonpanel.add(drawstatus);
 
+
+
+
+        //adds the tick counter
         tick = new JLabel("Tick;" + gameLogic.tick);
         buttonpanel.add(tick);
 
+        //shows how often it updates each time
         speedLabel = new JLabel(gameLogic.speedms + "ms");
 
+
+        //speedslider to adjust the speed of the updates
         speedSlider = new JSlider(50, 1000, gameLogic.speedms);
         buttonpanel.add(speedSlider);
             speedSlider.addChangeListener(e -> {
@@ -121,15 +132,17 @@ public class Gui extends JFrame implements ActionListener, MouseListener {
             });
         buttonpanel.add(speedLabel);
 
-        Timer uiRefresh = new Timer(100, e -> tick.setText("Tick: " + gameLogic.tick));
+        //creates timer
+        Timer uiRefresh = new Timer(gameLogic.speedms, e -> tick.setText("Tick: " + gameLogic.tick));
         uiRefresh.start();
-
+        //adds buttonpanel to the south
         this.add(buttonpanel, BorderLayout.SOUTH);
         this.pack();
 
-
+        //opens gui to front
         this.toFront();
         this.pack();
+        //starts GAMELOGIC
         gameLogic.start(gamePanel);
         this.setVisible(true);
         System.out.println("Gui booted");
@@ -140,35 +153,29 @@ public class Gui extends JFrame implements ActionListener, MouseListener {
     }
 
     @Override
+    //actions performed when clicked on certain things i.e start button sends a broadcast out saying Hey START this picks it up and checks the switch case statement
     public void actionPerformed(ActionEvent actionEvent) {
         String cmd = actionEvent.getActionCommand();
         switch (cmd) {
-            case "Draw":
-                if (GamePanel.drawable == true) {
-                    GamePanel.drawable = false;
-                    System.out.println("Draw false");
-                } else if (GamePanel.drawable == false) {
-                    GamePanel.drawable = true;
-                    System.out.println("Draw true");
-                }
-                drawstatus.setText(GamePanel.drawable ? "On" : "Off");
-                break;
+            // start starts the sim
             case "Start":
                 gameLogic.start(gamePanel);
                 gameLogic.gamerunning = true;
                 GamePanel.drawable = false;
                 System.out.println("True running");
-                drawstatus.setText(GamePanel.drawable ? "On" : "Off");
+
 
                 break;
+                //stop stops the sim
             case "Stop":
                 gameLogic.stop();
                 gameLogic.gamerunning = false;
                 GamePanel.drawable = true;
                 System.out.println("False running");
-                drawstatus.setText(GamePanel.drawable ? "On" : "Off");
+
 
                 break;
+                // new game clears board and tick
             case "New Game":
                 System.out.println("test");
                 for(int row = 0; row < GamePanel.rows; row++) {
@@ -176,6 +183,7 @@ public class Gui extends JFrame implements ActionListener, MouseListener {
                         GamePanel.gridCells[row][col] = false;
                     }
                 }
+                // resets tick and clears board
                 gameLogic.tick = 0;
                 gamePanel.repaint();
             break;
